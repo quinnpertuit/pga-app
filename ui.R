@@ -6,6 +6,16 @@ library(shinythemes)
 library(DT)
 library(shinydashboard)
 
+
+HistLeaderboard    = read_csv('HistLeaderboard.csv')
+CurrentLeaderboard = read_csv('CurrentLeaderboard.csv')
+WorldRank          = read_csv('WorldRank.csv')
+
+players = sort(unique(c(HistLeaderboard$player, CurrentLeaderboard$player, WorldRank$player)))
+seasons = sort(unique(c(HistLeaderboard$season, CurrentLeaderboard$season, WorldRank$season)), decreasing = TRUE)
+tours   = sort(unique(c(HistLeaderboard$tour,   CurrentLeaderboard$tour,   WorldRank$tour)))
+
+
 # ssh -i qdp.pem ubuntu@ec2-54-89-158-111.compute-1.amazonaws.com
 # sudo apt-get install libcurl4-openssl-dev libssl-dev
 
