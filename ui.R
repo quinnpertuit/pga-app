@@ -6,7 +6,6 @@ library(shinythemes)
 library(DT)
 library(shinydashboard)
 
-
 HistLeaderboard    = read_csv('HistLeaderboard.csv')
 CurrentLeaderboard = read_csv('CurrentLeaderboard.csv')
 WorldRank          = read_csv('WorldRank.csv')
@@ -14,7 +13,6 @@ WorldRank          = read_csv('WorldRank.csv')
 players = sort(unique(c(HistLeaderboard$player, CurrentLeaderboard$player, WorldRank$player)))
 seasons = sort(unique(c(HistLeaderboard$season, CurrentLeaderboard$season, WorldRank$season)), decreasing = TRUE)
 tours   = sort(unique(c(HistLeaderboard$tour,   CurrentLeaderboard$tour,   WorldRank$tour)))
-
 
 # ssh -i qdp.pem ubuntu@ec2-54-89-158-111.compute-1.amazonaws.com
 # sudo apt-get install libcurl4-openssl-dev libssl-dev
@@ -45,13 +43,30 @@ tours   = sort(unique(c(HistLeaderboard$tour,   CurrentLeaderboard$tour,   World
 # sudo su - -c "R -e \"install.packages(c('DT', 'shinyWidgets', 'rmarkdown'), repos='http://cran.rstudio.com/')\""
 # sudo su - -c "R -e \"install.packages(c('shinydashboard', 'shinyjs', 'esquisse'), repos='http://cran.rstudio.com/')\""
 
-sudo su - -c "R -e \"install.packages(c('shiny'))\""
+#sudo su - -c "R -e \"install.packages(c('shiny'))\""
 
 
 ui <- shinyUI(dashboardPage( 
   # Header and Skin #####
   skin = "green",
-  dashboardHeader(
+  dashboardHeader(tags$li(class = "dropdown",
+    HTML(
+      "
+          <script>
+          var socket_timeout_interval
+          var n = 0
+          $(document).on('shiny:connected', function(event) {
+          socket_timeout_interval = setInterval(function(){
+          Shiny.onInputChange('count', n++)
+          }, 15000)
+          });
+          $(document).on('shiny:disconnected', function(event) {
+          clearInterval(socket_timeout_interval)
+          });
+          </script>
+          "
+    )
+  ),
     title = 'PGA Statistics Dashboard',
     tags$li(class = "dropdown",
             tags$a(href="https://www.fantasygolfbag.com/", 
@@ -90,4 +105,4 @@ ui <- shinyUI(dashboardPage(
                                            height = "auto"))
                 
               ))
-    ))))
+    )),textOutput("keepAlive")))
