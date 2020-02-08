@@ -6,14 +6,6 @@ library(shinythemes)
 library(DT)
 library(shinydashboard)
 
-HistLeaderboard    = read_csv('HistLeaderboard.csv')
-CurrentLeaderboard = read_csv('CurrentLeaderboard.csv')
-WorldRank          = read_csv('WorldRank.csv')
-
-players = sort(unique(c(HistLeaderboard$player, Leaderboard$player, WorldRank$player)))
-seasons = sort(unique(c(HistLeaderboard$season, Leaderboard$season, WorldRank$season)), decreasing = TRUE)
-tours   = sort(unique(c(HistLeaderboard$tour,   Leaderboard$tour,   WorldRank$tour)))
-
 server <- function(input,output, session){
   
   data_r <- reactiveValues(data = CurrentLeaderboard, name = "Leaderboard Current")
