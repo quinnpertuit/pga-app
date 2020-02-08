@@ -8,6 +8,11 @@ library(shinydashboard)
 
 server <- function(input,output, session){
   
+  output$stayWoke <- renderText({
+    req(input$count)
+    paste("Stay woke:", input$count)
+  })
+  
   data_r <- reactiveValues(data = CurrentLeaderboard, name = "Leaderboard Current")
   
   observeEvent(input$data, {
